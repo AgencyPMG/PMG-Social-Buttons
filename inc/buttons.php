@@ -35,7 +35,8 @@ class PMG_Social_Buttons_Buttons extends PMG_Social_Buttons
 {
     public function _setup()
     {
-        add_filter('the_content', array($this, 'add_buttons'));
+        if(apply_filters('pmg_social_buttons_add_to_content', true))
+            add_filter('the_content', array($this, 'add_buttons'));
 
         foreach($this->get_fields() as $f => $_)
         {
@@ -51,6 +52,11 @@ class PMG_Social_Buttons_Buttons extends PMG_Social_Buttons
         if(apply_filters('pmg_social_buttons_show', !is_singular() || is_front_page()))
             return $c;
 
+        return $this->do_buttons($post) . $c;
+    }
+
+    public function do_buttons($post)
+    {
         $url = get_permalink($post);
         $cls = $this->get_cls();
 
@@ -69,9 +75,7 @@ class PMG_Social_Buttons_Buttons extends PMG_Social_Buttons
 
         do_action('pmg_social_buttons_after', $post, $url);
         echo '</div>';
-        $res = ob_get_clean();
-
-        return $res . $c;
+        return ob_get_clean();
     }
 
     public function facebook($post, $url)
