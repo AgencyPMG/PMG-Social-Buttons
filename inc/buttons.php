@@ -49,8 +49,12 @@ class PMG_Social_Buttons_Buttons extends PMG_Social_Buttons
     {
         global $post;
 
-        if(apply_filters('pmg_social_buttons_show', !is_singular() || is_front_page()))
-            return $c;
+        if(apply_filters(
+            'pmg_social_buttons_disabled',
+            !is_singular() || is_front_page() || stripos($c, '<!--nosocial-->') !== false,
+            $post,
+            $c
+        )) return $c;
 
         return $this->do_buttons($post) . $c;
     }
